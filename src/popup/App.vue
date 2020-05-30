@@ -134,6 +134,12 @@
           <v-list>
             <v-list-item>
               <v-list-item-action>
+                <v-switch v-model="showCounter"></v-switch>
+              </v-list-item-action>
+              <v-list-item-title>Show total payments counter</v-list-item-title>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-action>
                 <v-switch v-model="showPaymentsInXRP"></v-switch>
               </v-list-item-action>
               <v-list-item-title>Show payments in XRP</v-list-item-title>
@@ -185,25 +191,31 @@ export default {
       reloadDisabled: false,
       optionsDialog: false,
       showPaymentsInXRP: false,
-      hostnames: []
+      hostnames: [],
+      showCounter: false
     };
   },
   async created() {
     this.$vuetify.theme.dark = true;
-    const [theme, price, format, agreeSupport, hostnames] = await Promise.all([
-      getRecords('paytrackr_theme', 'dark'),
+    const [options, price, agreeSupport, hostnames] = await Promise.all([
+      getRecords('paytrackr_options', {
+        showCounter: true,
+        format: 'USD',
+        theme: 'dark'
+      }),
       getRecords('paytrackr_xrp_in_usd'),
-      getRecords('paytrackr_format', 'USD'),
       getRecords('paytrackr_support_developer', false),
       getRecords('paytrackr_hostnames')
     ]);
-    if (theme !== 'dark') {
+    if (options.theme !== 'dark') {
       this.$vuetify.theme.dark = false;
     }
-    this.showPaymentsInXRP = format === 'XRP';
+    this.showPaymentsInXRP = options.format === 'XRP';
     this.xrpInUSD = price;
     this.agreeSupport = agreeSupport;
     this.hostnames = hostnames;
+    console.log(options);
+    this.showCounter = options.showCounter;
 
     this.$browser.storage.onChanged.addListener(this.onChangeListener);
   },
@@ -211,12 +223,6 @@ export default {
     this.$browser.storage.onChanged.removeListener(this.onChangeListener);
   },
   methods: {
-    async reloadData() {
-      this.reloadDisabled = true;
-      await this.$refs.dashboard.fetchHostnames();
-      await this.$refs.recentPayments.fetchHistory();
-      this.reloadDisabled = false;
-    },
     async onChangeListener(changes) {
       if (changes['paytrackr_xrp_in_usd']) {
         this.xrpInUSD = changes['paytrackr_xrp_in_usd'].newValue;
@@ -282,6 +288,13 @@ export default {
       var view = new Uint8Array(buf);
       for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xff;
       return buf;
+    },
+    async updateOptions(data) {
+      const options = await getRecords('paytrackr_options');
+      setRecords('paytrackr_options', {
+        ...options,
+        ...data
+      });
     }
   },
   watch: {
@@ -295,10 +308,25 @@ export default {
       setRecords('paytrackr_support_developer', val);
     },
     showPaymentsInXRP(val) {
-      setRecords('paytrackr_format', val ? 'XRP' : 'USD');
+      this.updateOptions({
+        format: val ? 'XRP' : 'USD'
+      });
+    },
+    showCounter(val) {
+      this.updateOptions({
+        showCounter: val
+      });
     },
     async '$vuetify.theme.dark'(val) {
-      await setRecords('paytrackr_theme', val ? 'dark' : 'light');
+      this.updateOptions({
+        theme: val ? 'dark' : 'light'
+      });
+      const tabs = await this.$browser.tabs.query({});
+      tabs.forEach(tab => {
+        this.$browser.tabs.sendMessage(tab.id, {
+          theme: val ? 'dark' : 'light'
+        });
+      });
     },
     async supperDeveloperDialog(val) {
       if (val) {

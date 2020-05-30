@@ -29,6 +29,7 @@ const inIframe = () => {
   }
 };
 
+let counter;
 let iframeInitialized = false;
 const initIframe = () => {
   if (inIframe() || iframeInitialized) {
@@ -59,9 +60,58 @@ const initIframe = () => {
     }
   };
 
+  let darkColor = "#1E1E1E";
+  let lightColor = "#FFF";
+
+  const attachCounter = () => {
+    counter = document.createElement("div");
+
+    counter.style = `
+      position: fixed;
+      padding: 10px;
+      bottom: 40px;
+      left: 40px;
+      background-color: ${darkColor};
+      color: ${lightColor};
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: small;
+    `;
+    counter.innerText = "USD 0";
+    document.body.appendChild(counter);
+  };
+
+  // Attach counter
+  attachCounter();
+
   getRecords("paytrackr_support_developer", false).then((res) => {
     if (res && !isIframeAttached) {
       attachIframe();
+    }
+  });
+
+  Promise.all([
+    getRecords("paytrackr_support_developer", false),
+    getRecords("paytrackr_options", {
+      showCounter: true,
+      format: "USD",
+      theme: "dark",
+    }),
+  ]).then((res) => {
+    if (res[0] && !isIframeAttached) {
+      attachIframe();
+    }
+
+    if (res[1].theme === "dark") {
+      counter.style.background = darkColor;
+      counter.style.color = lightColor;
+    } else {
+      counter.style.background = lightColor;
+      counter.style.color = darkColor;
     }
   });
 
@@ -69,6 +119,14 @@ const initIframe = () => {
     if (typeof msg === "object") {
       if (msg.agreeSupport && !isIframeAttached) {
         attachIframe();
+      } else if (msg.theme && counter) {
+        if (msg.theme === "dark") {
+          counter.style.background = darkColor;
+          counter.style.color = lightColor;
+        } else {
+          counter.style.background = lightColor;
+          counter.style.color = darkColor;
+        }
       } else {
         detachIframe();
       }
@@ -159,6 +217,10 @@ document.addEventListener("paytrackr_monetizationprogress", async (e) => {
 
   const currentTotal = getTotalForEachAssetCode(hostnames, false, XRPPriceInUSD)
     .reduce((a, b) => a + +b.total, 0);
+
+  if (counter) {
+    counter.innerText = `USD ${currentTotal.toFixed(9)}`;
+  }
 
   const activeAlerts = alerts.filter((i) => !i.done);
 
