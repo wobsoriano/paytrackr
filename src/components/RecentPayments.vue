@@ -127,7 +127,9 @@ export default {
     async fetchHistory() {
       this.page = 1;
       try {
-        this.initialItems = await getRecords('paytrackr_history');
+        this.initialItems = (await getRecords('paytrackr_history')).sort(
+          (a, b) => b.date - a.date
+        );
         this.items = this.paginate(
           this.initialItems,
           this.itemsPerPage,
@@ -154,10 +156,7 @@ export default {
         this.itemsPerPage,
         this.page
       );
-      const items = [
-        ...new Set([...this.items, ...newItems].map(i => JSON.stringify(i)))
-      ].map(i => JSON.parse(i));
-      this.items = items;
+      this.items = [...this.items, ...newItems];
       if (newItems.length === this.itemsPerPage) {
         this.page++;
       } else {

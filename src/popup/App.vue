@@ -3,6 +3,9 @@
     <v-app-bar app>
       <v-toolbar-title>PayTrackr v{{manifestVal.version || ''}}</v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-btn v-show="!realTimePopup" @click="reloadData" icon :reloadDisabled="reloadDisabled">
+        <v-icon>mdi-reload</v-icon>
+      </v-btn>
       <v-menu>
         <template v-slot:activator="{ on }">
           <v-btn v-on="on" icon>
@@ -253,6 +256,12 @@ export default {
       if (changes['paytrackr_hostnames'] && this.realTimePopup) {
         this.hostnames = changes['paytrackr_hostnames'].newValue;
       }
+    },
+    async reloadData() {
+      this.reloadDisabled = true;
+      this.hostnames = await getRecords('paytrackr_hostnames');
+      await this.$refs.recentPayments.fetchHistory();
+      this.reloadDisabled = false;
     },
     async resetData() {
       this.resetDataDialog = false;
