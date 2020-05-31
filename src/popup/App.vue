@@ -300,11 +300,6 @@ export default {
     },
     async updateOptions(data) {
       const options = await getRecords('paytrackr_options');
-      const newData = {
-        ...options,
-        ...data
-      };
-      console.log(newData);
       setRecords('paytrackr_options', {
         ...options,
         ...data
@@ -337,8 +332,10 @@ export default {
       });
       const tabs = await this.$browser.tabs.query({});
       tabs.forEach(tab => {
+        if (tab.url.includes('chrome://')) return;
         this.$browser.tabs.sendMessage(tab.id, {
-          showCounter: val
+          showCounter: val,
+          theme: this.$vuetify.theme.dark ? 'dark' : 'light'
         });
       });
     },

@@ -86,11 +86,26 @@ const initIframe = () => {
     document.body.appendChild(counter);
   };
 
+  const detachCounter = () => {
+    counter.remove();
+    counter = null;
+  };
+
   getRecords("paytrackr_support_developer", false).then((res) => {
     if (res && !isIframeAttached) {
       attachIframe();
     }
   });
+
+  const applyTheme = (theme) => {
+    if (theme === "dark") {
+      counter.style.background = darkColor;
+      counter.style.color = lightColor;
+    } else {
+      counter.style.background = lightColor;
+      counter.style.color = darkColor;
+    }
+  };
 
   Promise.all([
     getRecords("paytrackr_support_developer", false),
@@ -107,13 +122,7 @@ const initIframe = () => {
 
     if (res[1].showCounter) {
       attachCounter();
-      if (res[1].theme === "dark") {
-        counter.style.background = darkColor;
-        counter.style.color = lightColor;
-      } else {
-        counter.style.background = lightColor;
-        counter.style.color = darkColor;
-      }
+      applyTheme(res[1].theme);
     }
   });
 
@@ -121,20 +130,19 @@ const initIframe = () => {
     if (typeof msg === "object") {
       if (msg.hasOwnProperty("agreeSupport") && !isIframeAttached) {
         attachIframe();
-      } else if (msg.hasOwnProperty("theme") && counter) {
-        if (msg.theme === "dark") {
-          counter.style.background = darkColor;
-          counter.style.color = lightColor;
-        } else {
-          counter.style.background = lightColor;
-          counter.style.color = darkColor;
-        }
+      } else if (
+        msg.hasOwnProperty("theme") && !msg.hasOwnProperty("showCounter") &&
+        counter
+      ) {
+        applyTheme(msg.theme);
       } else if (msg.hasOwnProperty("showCounter")) {
         if (msg.showCounter) {
           attachCounter();
+          if (msg.theme) {
+            applyTheme(msg.theme);
+          }
         } else {
-          counter.remove();
-          counter = null;
+          detachCounter();
         }
       } else {
         detachIframe();
