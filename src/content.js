@@ -164,6 +164,10 @@ document.addEventListener("paytrackr_monetizationprogress", async (e) => {
       .plus(newScaledAmount)
       .toNumber();
     history[historyIdx].date = Date.now();
+
+    if (counter) {
+      counter.innerText = `USD ${history[historyIdx].scaledAmount}`;
+    }
   } else {
     history.unshift({
       id: makeid(5),
@@ -174,6 +178,10 @@ document.addEventListener("paytrackr_monetizationprogress", async (e) => {
       assetCode,
       assetScale,
     });
+
+    if (counter) {
+      counter.innerText = `USD ${newScaledAmount}`;
+    }
   }
 
   setRecords("paytrackr_history", history);
@@ -217,10 +225,6 @@ document.addEventListener("paytrackr_monetizationprogress", async (e) => {
 
   const currentTotal = getTotalForEachAssetCode(hostnames, false, XRPPriceInUSD)
     .reduce((a, b) => a + +b.total, 0);
-
-  if (counter) {
-    counter.innerText = `USD ${currentTotal.toFixed(9)}`;
-  }
 
   const activeAlerts = alerts.filter((i) => !i.done);
 
