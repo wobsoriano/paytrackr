@@ -1,9 +1,16 @@
 <template>
   <v-app>
     <v-app-bar app>
-      <v-toolbar-title>PayTrackr v{{manifestVal.version || ''}}</v-toolbar-title>
+      <v-toolbar-title
+        >PayTrackr v{{ manifestVal.version || '' }}</v-toolbar-title
+      >
       <v-spacer></v-spacer>
-      <v-btn v-show="!realTimePopup" @click="reloadData" icon :reloadDisabled="reloadDisabled">
+      <v-btn
+        v-show="!realTimePopup"
+        @click="reloadData"
+        icon
+        :reloadDisabled="reloadDisabled"
+      >
         <v-icon>mdi-reload</v-icon>
       </v-btn>
       <v-menu>
@@ -36,7 +43,11 @@
     <v-content>
       <v-container>
         <div class="text-center" v-if="loading">
-          <v-progress-circular :size="50" color="primary" indeterminate></v-progress-circular>
+          <v-progress-circular
+            :size="50"
+            color="primary"
+            indeterminate
+          ></v-progress-circular>
         </div>
         <v-tabs-items v-model="tab" v-else>
           <v-tab-item eager>
@@ -48,7 +59,10 @@
             />
           </v-tab-item>
           <v-tab-item eager>
-            <RecentPayments :realTimePopup="realTimePopup" ref="recentPayments" />
+            <RecentPayments
+              :realTimePopup="realTimePopup"
+              ref="recentPayments"
+            />
           </v-tab-item>
           <v-tab-item eager>
             <Alerts />
@@ -61,8 +75,7 @@
       <v-card>
         <v-card-title>Are you sure?</v-card-title>
         <v-card-text>
-          This will reset all payments back to 0 and clear all
-          alerts.
+          This will reset all payments back to 0 and clear all alerts.
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -78,7 +91,12 @@
         <v-card-text>
           <p v-text="manifestVal.description"></p>
           <v-list>
-            <v-list-item @click="aboutDialog = false; supperDeveloperDialog = true">
+            <v-list-item
+              @click="
+                aboutDialog = false;
+                supperDeveloperDialog = true;
+              "
+            >
               <v-list-item-content>
                 <v-list-item-title>Support developer</v-list-item-title>
               </v-list-item-content>
@@ -111,7 +129,10 @@
         <v-card-title>Support Developer</v-card-title>
         <v-card-text>
           <p>Thank you for using my extension. I hope you liked it.</p>
-          <p>By agreeing to support me, payments will be split between the Web-Monetized content and me.</p>
+          <p>
+            By agreeing to support me, payments will be split between the
+            Web-Monetized content and me.
+          </p>
           <v-checkbox v-model="agreeSupport" label="I agree"></v-checkbox>
         </v-card-text>
       </v-card>
@@ -160,7 +181,9 @@
               <v-list-item-action>
                 <v-switch v-model="realTimePopup"></v-switch>
               </v-list-item-action>
-              <v-list-item-title>Real-time Dashboard (CPU heavy)</v-list-item-title>
+              <v-list-item-title
+                >Real-time Dashboard (CPU heavy)</v-list-item-title
+              >
             </v-list-item>
           </v-list>
         </v-card-text>
@@ -273,7 +296,8 @@ export default {
       this.resetDataDialog = false;
       await Promise.all([
         setRecords('paytrackr_hostnames', []),
-        setRecords('paytrackr_history', [])
+        setRecords('paytrackr_history', []),
+        setRecords('paytrackr_disabled_sites', {})
       ]);
       this.hostnames = [];
       this.$refs.recentPayments.items = [];
