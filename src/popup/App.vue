@@ -269,8 +269,9 @@ export default {
         setRecords('paytrackr_hostnames', []),
         setRecords('paytrackr_history', [])
       ]);
-      this.$refs.dashboard.items = [];
+      this.hostnames = [];
       this.$refs.recentPayments.items = [];
+      this.$refs.recentPayments.initialItems = [];
       this.snackbarText = 'Cleared';
       this.snackbar = true;
       this.resetDataDialog = false;

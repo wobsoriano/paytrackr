@@ -193,7 +193,7 @@ document.addEventListener("paytrackr_monetizationprogress", async (e) => {
       paymentPointer,
       url: e.target.URL,
       date: Date.now(),
-      scaledAmount: newScaledAmount,
+      scaledAmount: Number(newScaledAmount).toFixed(assetScale),
       assetCode,
       assetScale,
     });
