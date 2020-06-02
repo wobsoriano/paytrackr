@@ -12,9 +12,10 @@
 
 - **Dashboard** - Aggregated breakdown on how much went to each site in total
 - **Recent Payments** - History of micropayments to websites with web monetization
+- **Enable/Disable Monetization**
+- **Payment Counter** - Floating counter of how much went to each active tab in total
 - **Payment Alerts** - Get notifications when a certain amount is reached
 - **Export History** - Export micropayments history to csv/xlsx
-- **Theme Switcher** - Choose between light and dark mode
 
 ## Usage
 
