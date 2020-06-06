@@ -32,15 +32,15 @@ browser.runtime.onMessage.addListener((msg) => {
 });
 
 // Temporary version checker
-const checkVersion = async () => {
-  const version = await getRecords("paytrackr_version", "");
+// const checkVersion = async () => {
+//   const version = await getRecords("paytrackr_version", "");
 
-  if (!version || version !== manifest.version) {
-    setRecords("paytrackr_history", []);
-    setRecords("paytrackr_hostnames", []);
-    setRecords("paytrackr_alerts", []);
-    setRecords("paytrackr_version", manifest.version);
-  }
-};
+//   if (!version || version !== manifest.version) {
+//     setRecords("paytrackr_history", []);
+//     setRecords("paytrackr_hostnames", []);
+//     setRecords("paytrackr_alerts", []);
+//     setRecords("paytrackr_version", manifest.version);
+//   }
+// };
 
-checkVersion();
+// checkVersion();
