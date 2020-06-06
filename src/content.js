@@ -221,9 +221,11 @@ document.addEventListener("paytrackr_monetizationprogress", async (e) => {
     history[historyIdx].date = Date.now();
 
     if (counter) {
-      counter.innerText = `${assetCode} ${
-        Number(history[historyIdx].scaledAmount).toFixed(assetScale)
-      }`;
+      let counterAmount = Number(history[historyIdx].scaledAmount).toFixed(assetScale);
+      if (assetCode === 'XRP') {
+        counterAmount = (counterAmount * xrpInUSD).toFixed(assetScale)
+      }
+      counter.innerText = `USD ${counterAmount}`;
     }
   } else {
     history.unshift({
@@ -237,9 +239,11 @@ document.addEventListener("paytrackr_monetizationprogress", async (e) => {
     });
 
     if (counter) {
-      counter.innerText = `${assetCode} ${
-        Number(newScaledAmount).toFixed(assetScale)
-      }`;
+      let counterAmount = Number(newScaledAmount).toFixed(assetScale);
+      if (assetCode === 'XRP') {
+        counterAmount = (counterAmount * xrpInUSD).toFixed(assetScale)
+      }
+      counter.innerText = `USD ${counterAmount}`;
     }
   }
 
