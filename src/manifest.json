@@ -19,7 +19,6 @@
       "matches": ["https://*/*", "http://*/*"],
       "match_about_blank": false,
       "all_frames": true,
-      "run_at": "document_start",
       "js": ["content.js"]
     }
   ],

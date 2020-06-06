@@ -223,7 +223,7 @@ document.addEventListener("paytrackr_monetizationprogress", async (e) => {
     if (counter) {
       let counterAmount = Number(history[historyIdx].scaledAmount).toFixed(assetScale);
       if (assetCode === 'XRP') {
-        counterAmount = (counterAmount * xrpInUSD).toFixed(assetScale)
+        counterAmount = (counterAmount * XRPPriceInUSD).toFixed(assetScale)
       }
       counter.innerText = `USD ${counterAmount}`;
     }
@@ -241,7 +241,7 @@ document.addEventListener("paytrackr_monetizationprogress", async (e) => {
     if (counter) {
       let counterAmount = Number(newScaledAmount).toFixed(assetScale);
       if (assetCode === 'XRP') {
-        counterAmount = (counterAmount * xrpInUSD).toFixed(assetScale)
+        counterAmount = (counterAmount * XRPPriceInUSD).toFixed(assetScale)
       }
       counter.innerText = `USD ${counterAmount}`;
     }
