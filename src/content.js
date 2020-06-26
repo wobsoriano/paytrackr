@@ -221,9 +221,11 @@ document.addEventListener("paytrackr_monetizationprogress", async (e) => {
     history[historyIdx].date = Date.now();
 
     if (counter) {
-      let counterAmount = Number(history[historyIdx].scaledAmount).toFixed(assetScale);
-      if (assetCode === 'XRP') {
-        counterAmount = (counterAmount * XRPPriceInUSD).toFixed(assetScale)
+      let counterAmount = Number(history[historyIdx].scaledAmount).toFixed(
+        assetScale,
+      );
+      if (assetCode === "XRP") {
+        counterAmount = (counterAmount * XRPPriceInUSD).toFixed(assetScale);
       }
       counter.innerText = `USD ${counterAmount}`;
     }
@@ -240,8 +242,8 @@ document.addEventListener("paytrackr_monetizationprogress", async (e) => {
 
     if (counter) {
       let counterAmount = Number(newScaledAmount).toFixed(assetScale);
-      if (assetCode === 'XRP') {
-        counterAmount = (counterAmount * XRPPriceInUSD).toFixed(assetScale)
+      if (assetCode === "XRP") {
+        counterAmount = (counterAmount * XRPPriceInUSD).toFixed(assetScale);
       }
       counter.innerText = `USD ${counterAmount}`;
     }
@@ -310,7 +312,7 @@ document.addEventListener("paytrackr_monetizationstart", (e) => {
 //   browser.runtime.sendMessage("paytrackr_monetizationstop");
 // });
 
-document.addEventListener('visibilitychange', () => {
+document.addEventListener("visibilitychange", () => {
   if (document.hidden && !inIframe()) {
     browser.runtime.sendMessage("paytrackr_monetizationstop");
   }
